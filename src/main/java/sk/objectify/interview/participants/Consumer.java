@@ -13,21 +13,29 @@ public class Consumer extends Thread {
     private static final Logger LOGGER = LoggerFactory.getLogger(Consumer.class);
     private BlockingQueue<Command> queue;
     private UsersRepository usersRepository;
+    private boolean runForever = true;
 
     public Consumer(BlockingQueue<Command> queue, UsersRepository usersRepository) {
         this.queue = queue;
         this.usersRepository = usersRepository;
     }
 
+    public Consumer(BlockingQueue<Command> queue, UsersRepository usersRepository, boolean runForever) {
+        this.queue = queue;
+        this.usersRepository = usersRepository;
+        this.runForever = runForever;
+    }
+
     @Override
     public void run() {
         try {
-            while (true) {
+            do {
+             
                 Command command = queue.take();
                 LOGGER.debug("Received comand: {}.", command);
 
                 mapCommandToAction(command);
-            }
+            } while (runForever);
         } catch (InterruptedException e) {
             LOGGER.info("Consumer thread was interrupted");
         } catch (SQLException e) {
