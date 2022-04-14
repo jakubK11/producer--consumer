@@ -9,7 +9,6 @@ public class H2Helper {
     }
 
     public static Connection init() throws SQLException {
-        return DriverManager.getConnection(
-                "jdbc:h2:mem:˜/test;INIT=DROP TABLE SUSERS IF EXISTS\\; CREATE TABLE SUSERS (USER_ID long, USER_GUID varchar(255), USER_NAME varchar(255))");
+        return DriverManager.getConnection("jdbc:h2:mem:˜/test;INIT=runscript from 'classpath:db/init.sql'");
     }
 }
