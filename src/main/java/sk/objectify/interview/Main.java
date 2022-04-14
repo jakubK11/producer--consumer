@@ -1,7 +1,6 @@
 package sk.objectify.interview;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -10,6 +9,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sk.objectify.interview.h2.H2Helper;
 import sk.objectify.interview.participants.Command;
 import sk.objectify.interview.participants.CommandType;
 import sk.objectify.interview.participants.Consumer;
@@ -23,7 +23,9 @@ class Main {
 
     public static void main(String[] args) {
         try {
-            Connection connection = initH2();
+
+            Connection connection = H2Helper.init();
+            ;
 
             BlockingQueue<Command> queue = new LinkedBlockingQueue<>();
 
@@ -45,10 +47,5 @@ class Main {
         } catch (SQLException e) {
             LOGGER.error("Failed to connect to database", e);
         }
-    }
-
-    public static Connection initH2() throws SQLException {
-        return DriverManager.getConnection(
-                "jdbc:h2:mem:˜/test;INIT=DROP TABLE SUSERS IF EXISTS\\; CREATE TABLE SUSERS (USER_ID long, USER_GUID varchar(255), USER_NAME varchar(255))");
     }
 }
